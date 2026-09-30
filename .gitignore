@@ -1,0 +1,22 @@
+# Maven
+target/
+pom.xml.tag
+pom.xml.releaseBackup
+pom.xml.nextBackup
+pom.xml.backup
+release.properties
+dependency-reduced-pom.xml
+
+# IDE
+.settings/
+.classpath
+.project
+.idea/
+*.iml
+*.swp
+*.swo
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
