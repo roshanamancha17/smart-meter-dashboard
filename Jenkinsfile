@@ -1,14 +1,17 @@
 pipeline {
     agent any
+    tools {
+        maven 'Maven 3'
+    }
     stages {
         stage('Checkout') {
             steps {
                 git branch: 'feature/meter-entry', url: 'https://github.com/roshanamancha17/smart-meter-dashboard.git'
             }
         }
-        stage('Build & Unit Test') {
+        stage('Build & Package') {
             steps {
-                bat 'mvn clean package -DskipTests=false'
+                sh 'mvn clean package -DskipTests'
             }
         }
         stage('Archive Artifact') {
@@ -19,10 +22,10 @@ pipeline {
     }
     post {
         success {
-            echo 'Pipeline completed successfully!'
+            echo 'Build and packaging completed successfully!'
         }
         failure {
-            echo 'Pipeline failed during execution.'
+            echo 'Pipeline encountered an error.'
         }
     }
 }
