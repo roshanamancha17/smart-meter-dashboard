@@ -6,9 +6,9 @@ pipeline {
                 git branch: 'feature/meter-entry', url: 'https://github.com/roshanamancha17/smart-meter-dashboard.git'
             }
         }
-        stage('Build & Package') {
+        stage('Build & Test') {
             steps {
-                sh 'mvn clean package -DskipTests'
+                sh 'mvn clean test package'
             }
         }
         stage('Archive Artifact') {
@@ -18,11 +18,14 @@ pipeline {
         }
     }
     post {
+        always {
+            junit 'target/surefire-reports/*.xml'
+        }
         success {
-            echo 'Build and packaging completed successfully!'
+            echo 'Quality Gate Passed: All Selenium and Unit tests succeeded!'
         }
         failure {
-            echo 'Pipeline encountered an error.'
+            echo 'Quality Gate Failed: Tests failed, stopping pipeline.'
         }
     }
 }
