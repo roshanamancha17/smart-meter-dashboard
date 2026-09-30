@@ -21,7 +21,7 @@
 
     - name: Perform Health Check on Deployed Application
       ansible.builtin.uri:
-        url: "http://localhost:{{ app_port }}/"
+        url: "http://host.docker.internal:{{ app_port }}/"
         status_code: 200
         timeout: 10
       register: health_check_result
