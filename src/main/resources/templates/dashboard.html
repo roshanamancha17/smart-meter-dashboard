@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Smart Meter Consumption Dashboard</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light p-4">
+    <div class="container">
+        <h1 class="mb-4">⚡ Smart Meter Dashboard</h1>
+        
+        <!-- Summary Indicators -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <div class="card text-white bg-primary">
+                    <div class="card-body">
+                        <h5 class="card-title">Total Consumption</h5>
+                        <p class="card-text fs-3" th:text="${#numbers.formatDecimal(totalConsumption, 1, 2) + ' kWh'}">0 kWh</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card text-white bg-danger">
+                    <div class="card-body">
+                        <h5 class="card-title">Active Alerts (>100 kWh)</h5>
+                        <p class="card-text fs-3" th:text="${alertCount}">0</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Meter Reading Form -->
+        <div class="card mb-4 p-3 shadow-sm">
+            <h4>Record Meter Reading</h4>
+            <form action="/add" method="post" class="row g-3">
+                <div class="col-md-5">
+                    <input type="text" name="meterId" class="form-control" placeholder="Meter ID (e.g. MTR-001)" required>
+                </div>
+                <div class="col-md-5">
+                    <input type="number" step="0.01" name="consumptionKwh" class="form-control" placeholder="Consumption (kWh)" required>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-success w-100">Submit</button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Search & Filter Table -->
+        <div class="card p-3 shadow-sm">
+            <div class="d-flex justify-content-between mb-3">
+                <h4>Meter Readings Log</h4>
+                <form action="/" method="get" class="d-flex">
+                    <input type="text" name="search" class="form-control me-2" placeholder="Search Meter ID..." th:value="${search}">
+                    <button type="submit" class="btn btn-outline-primary">Search</button>
+                </form>
+            </div>
+            <table class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Meter ID</th>
+                        <th>Consumption (kWh)</th>
+                        <th>Timestamp</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="r : ${readings}">
+                        <td th:text="${r.id}">1</td>
+                        <td th:text="${r.meterId}">MTR-001</td>
+                        <td th:text="${r.consumptionKwh}">45.5</td>
+                        <td th:text="${r.timestamp}">2026-09-30</td>
+                        <td>
+                            <span th:class="${r.status == 'ALERT'} ? 'badge bg-danger' : 'badge bg-success'" th:text="${r.status}">NORMAL</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</body>
+</html>
